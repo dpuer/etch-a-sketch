@@ -6,6 +6,8 @@ let canvas = document.querySelector("#canvas");
 canvas.style.width = canvasSizePx + "px";
 canvas.style.height = canvasSizePx + "px";
 
+let clearBtn = document.querySelector("#clear-btn");
+
 // create the grid
 function generateSquares() {
     for (let i = 0; i < canvasSizeSquares; i++) {
@@ -38,6 +40,19 @@ function paint(event) {
     if (event.buttons === 1) {
         square.style.backgroundColor = "black";
     }
+}
+
+clearBtn.addEventListener("click", clear);
+
+function clear() {
+    console.log("click");
+
+    let rows = document.querySelectorAll(".row");
+    rows.forEach((row) => {
+        row.remove();
+    });
+    
+    generateSquares();
 }
 
 let pxSetting = document.querySelector(".px-setting");
