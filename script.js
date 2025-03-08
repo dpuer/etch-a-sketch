@@ -14,7 +14,9 @@ pxSetting.addEventListener("focus", drawBorders);
 pxSetting.addEventListener("blur", removeBorders);
 pxSetting.addEventListener("keyup", updateSquares);
 
-generateSquares();
+document.addEventListener("contextmenu", preventContextMenu);
+
+
 
 // create the grid
 function generateSquares() {
@@ -45,9 +47,18 @@ function generateSquares() {
 function paint(event) {
     let square = event.target;
 
-    // turn squares black while holding down left click
+    // turn squares black while holding down left click, white while holding down right click
     if (event.buttons === 1) {
         square.style.backgroundColor = "black";
+    } else if (event.buttons === 2) {
+        square.style.backgroundColor = "white";
+    }
+}
+
+// prevents context menu from popping up while right clicking on squares
+function preventContextMenu (event) {
+    if (event.target.classList[0] === "square") {
+        event.preventDefault();
     }
 }
 
@@ -90,7 +101,7 @@ function removeBorders() {
 function updateSquares() {
     let squares = parseInt(pxSetting.value); // number of squares on each dimension of the canvas
     
-    // remove all rows and pixels from the current canvas
+    // remove all rows and squares from the current canvas
     let rows = document.querySelectorAll(".row");
     rows.forEach((row) => {
         row.remove();
@@ -108,7 +119,7 @@ function updateSquares() {
         canvasSizeSquares = 100;
         high.style.color = "rgb(240, 86, 86)";
         low.style.color = "rgb(191, 183, 191)";
-    } else if (squares >= 2 && pixels <= 100) {
+    } else if (squares >= 2 && squares <= 100) {
         canvasSizeSquares = squares;
         low.style.color = "rgb(191, 183, 191)";
         high.style.color = "rgb(191, 183, 191)";
@@ -118,9 +129,11 @@ function updateSquares() {
         high.style.color = "rgb(191, 183, 191)";
     }
 
-    // update the size of squares (pixels) based on user input, regenerate squares
+    // update the size of squares based on user input, regenerate squares
     squareSizePx = canvasSizePx / canvasSizeSquares;
 
     generateSquares();
     drawBorders();
 }
+
+generateSquares();

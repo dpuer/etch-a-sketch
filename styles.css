@@ -16,9 +16,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 50 50px;
     flex-direction: column;
-    gap: 25px;
 }
 
 #canvas {
@@ -29,7 +27,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px;
+    padding-top: 15px;
+    padding-bottom: 25px;
 }
 
 .px-setting,
@@ -63,4 +62,10 @@ body {
 
 #clear-btn {
     width: 100px;
+    margin-top: 25px;
+}
+.hint {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    font-size: 15px;
 }
