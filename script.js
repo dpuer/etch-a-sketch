@@ -1,5 +1,5 @@
-let canvasSizeSquares = 16; // 2 - 100
 const canvasSizePx = 500;
+let canvasSizeSquares = 16; // 2 - 100px
 let squareSizePx = canvasSizePx / canvasSizeSquares;
 
 let canvas = document.querySelector("#canvas");
@@ -7,6 +7,14 @@ canvas.style.width = canvasSizePx + "px";
 canvas.style.height = canvasSizePx + "px";
 
 let clearBtn = document.querySelector("#clear-btn");
+let pxSetting = document.querySelector(".px-setting");
+
+clearBtn.addEventListener("click", clear);
+pxSetting.addEventListener("focus", drawBorders);
+pxSetting.addEventListener("blur", removeBorders);
+pxSetting.addEventListener("keyup", updateSquares);
+
+generateSquares();
 
 // create the grid
 function generateSquares() {
@@ -34,16 +42,16 @@ function generateSquares() {
     }
 }
 
-
 function paint(event) {
     let square = event.target;
+
+    // turn squares black while holding down left click
     if (event.buttons === 1) {
         square.style.backgroundColor = "black";
     }
 }
 
-clearBtn.addEventListener("click", clear);
-
+// regenerate blank squares onto the canvas
 function clear() {
     console.log("click");
 
@@ -51,12 +59,11 @@ function clear() {
     rows.forEach((row) => {
         row.remove();
     });
-    
+
     generateSquares();
 }
 
-let pxSetting = document.querySelector(".px-setting");
-
+// drawBorders is called while user is updating the canvas size for visualization
 function drawBorders() {
     canvas.style.border = "1px solid rgb(130, 120, 130)";
 
@@ -68,9 +75,8 @@ function drawBorders() {
     });
 }
 
-pxSetting.addEventListener("focus", drawBorders);
-
-pxSetting.addEventListener("blur", () => {
+// remove borders when the user is done updating the canvas size
+function removeBorders() {
     canvas.style.border = "none";
 
     let squares = document.querySelectorAll(".square");
@@ -79,11 +85,12 @@ pxSetting.addEventListener("blur", () => {
         square.style.width = squareSizePx + "px";
         square.style.height = squareSizePx + "px";
     });
-});
+}
 
-pxSetting.addEventListener("keyup", () => {
-    let pixels = parseInt(pxSetting.value);
+function updateSquares() {
+    let squares = parseInt(pxSetting.value); // number of squares on each dimension of the canvas
     
+    // remove all rows and pixels from the current canvas
     let rows = document.querySelectorAll(".row");
     rows.forEach((row) => {
         row.remove();
@@ -91,16 +98,18 @@ pxSetting.addEventListener("keyup", () => {
 
     let low = document.querySelector(".low");
     let high = document.querySelector(".high");
-    if (pixels < 2) {
+
+    // handle input values that are too high or too low
+    if (squares < 2) {
         canvasSizeSquares = 2;
         low.style.color = "rgb(240, 86, 86)";
         high.style.color = "rgb(191, 183, 191)";
-    } else if (pixels > 100) {
+    } else if (squares > 100) {
         canvasSizeSquares = 100;
         high.style.color = "rgb(240, 86, 86)";
         low.style.color = "rgb(191, 183, 191)";
-    } else if (pixels >= 2 && pixels <= 100) {
-        canvasSizeSquares = pixels;
+    } else if (squares >= 2 && pixels <= 100) {
+        canvasSizeSquares = squares;
         low.style.color = "rgb(191, 183, 191)";
         high.style.color = "rgb(191, 183, 191)";
     } else {
@@ -109,10 +118,9 @@ pxSetting.addEventListener("keyup", () => {
         high.style.color = "rgb(191, 183, 191)";
     }
 
+    // update the size of squares (pixels) based on user input, regenerate squares
     squareSizePx = canvasSizePx / canvasSizeSquares;
 
     generateSquares();
     drawBorders();
-});
-
-generateSquares();
+}
